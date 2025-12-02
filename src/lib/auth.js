@@ -7,16 +7,17 @@ import db from "./db";
 
 export const auth = betterAuth({
     database: prismaAdapter(db, {
-        provider: "postgresql", 
+        provider: "postgresql",
     }),
-    socialProviders:{
-        github:{
-            clientId:process.env.GITHUB_CLIENT_ID,
-            clientSecret:process.env.GITHUB_CLIENT_SECRET
+    socialProviders: {
+        github: {
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET
         }
     },
-    trustedOrigins: [
-        process.env.BETTER_AUTH_URL,
-        "https://*.vercel.app", // Allow all Vercel preview deployments
-    ]
+    advanced: {
+        // Disable origin check for Vercel deployments
+        // Vercel creates dynamic preview URLs that can't be whitelisted
+        disableCSRFCheck: process.env.NODE_ENV === "production",
+    }
 });
